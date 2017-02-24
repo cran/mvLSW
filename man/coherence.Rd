@@ -55,7 +55,7 @@
 }
 
 \seealso{
-  \code{\link{mvLSW}}, \code{\link{mvEWS}}.
+  \code{\link{as.mvLSW}}, \code{\link{mvEWS}}.
 }
 
 \examples{

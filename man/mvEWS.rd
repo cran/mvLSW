@@ -14,9 +14,9 @@
 }
 
 \arguments{
-  \item{X}{A multivariate time series object of class \code{ts} or 
-    \code{matrix}. The length of the time series must \eqn{2^J} for 
-	positive integer J.}
+  \item{X}{A multivariate time series object of class \code{ts}, 
+    \code{zoo}, \code{xts} or \code{matrix}. The length of the 
+    time series must \eqn{2^J} for positive integer J.}
   \item{filter.number}{Integer number defining the number of 
     vanishing moments of the wavelet function. By default, 
 	\code{filter.number=1} and so defining the Haar wavelet.}
@@ -97,6 +97,7 @@
   
   Finally, a threshold is applied to the eigenvalues of the EWS 
   \eqn{\hat{S}_{j,k}} to ensure that the matrices are positive definite.
+
 }
 
 \value{
@@ -111,10 +112,7 @@
 }
 
 \seealso{
-  \code{ts}, \code{wd}, \code{kernel}, 
-  \code{\link{RawPeriodogram}}, \code{\link{Smooth_EWS}}, 
-  \code{\link{CorrectBias}}, \code{\link{AdjPositiveDef}}, 
-  \code{\link{mvLSW}}, \code{ipndacw}.
+  \code{ts}, \code{wd}, \code{kernel}, \code{\link{as.mvLSW}}, \code{ipndacw}.
 }
 
 \examples{

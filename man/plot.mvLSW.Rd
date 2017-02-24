@@ -1,10 +1,6 @@
 % File src/library/base/man/plot.mvLSW.Rd
 \name{plot.mvLSW}
 \alias{plot.mvLSW}
-\alias{single_pqj_plot}
-\alias{panel_pq_plot}
-\alias{panel_j_plot}
-\alias{matrix_j_plot}
 
 \title{Plot mvLSW Object}
 \description{
@@ -14,71 +10,53 @@
 \usage{
   \method{plot}{mvLSW}(x, style = 1, info = NULL, Int.lower = NULL, 
     Int.upper = NULL, diag = TRUE, sub = "Spectrum", ...)
-
-  single_pqj_plot(object, Int.lower = NULL, Int.upper = NULL, p = 1, 
-    q = 1, j = 1, ...)
-  
-  panel_j_plot(object, Int.lower = NULL, Int.upper = NULL, j = 1, 
-    diag = TRUE, ...)
-
-  panel_pq_plot(object, Int.lower = NULL, Int.upper = NULL, p = 1, 
-    q = 1, ...)
-
-  matrix_j_plot(object, p = 1, q = 1, sub = "Spectrum", ...)
 }
 
 \arguments{
-  \item{x, object}{A \code{mvLSW} object.}
+  \item{x}{A \code{mvLSW} object.}
   \item{style}{Index stating the type of plotting format for 
     the mvLSW object. (See details.)}
-  \item{info}{Vector containing the channel and level indices 
-    to be passed to the requested plotting \code{style}. 
-	(See details.)}
+  \item{info}{Vector containing the channel and/or level indices 
+    defineing the slice throught the mvEWS according to the 
+	requested plotting \code{style}. (See details.)}
   \item{Int.lower, Int.upper}{\code{mvLSW} objects respectively 
     containing the lower and upper values for the interval 
 	to be drawn. Both arguments must be supplied to be drawn. 
 	By default, both arguments are \code{NULL}.}
-  \item{p,q}{Signal indices.}
-  \item{j}{Level index.}
-  \item{diag}{Logical, should the diagonal pannels be drawn when calling 
-    \code{panel_j_plot}. Ideally this should be \code{FALSE} if 
+  \item{diag}{Logical, should the diagonal pannels be drawn when 
+    \code{style=2}. Ideally this should be \code{FALSE} if 
 	\code{object} contains the coherence. Set to \code{TRUE} by default.}
-  \item{sub}{Subtitle that is supplied to \code{matrix_j_plot}. Set to 
-    \code{"Spectrum"} by default.}
+  \item{sub}{Plot subtitle. Set to \code{"Spectrum"} by default.}
   \item{...}{Additional graphical parameters.}
 }
 
 \details{
-  These commands plot the data contained within the \code{mvLSW} based 
+  This command plots the data contained within the \code{mvLSW} based 
   on requested plotting style.
   
-  Plotting style \code{style=1} invokes the command 
-  \code{single_pqj_plot} that generates a single plot for a 
-  specified signal pair \code{p} & \code{q} and level \code{j}; 
-  supplied via the argument \code{info=c(p,q,j)} if called via the 
-  \code{plot.mvLSW} command.
+  Plotting style \code{style=1} with information \code{info=c(p,q,j)} 
+  generates a single plot for a 
+  specified signal pair \code{p} & \code{q} and level \code{j}.
   
-  Plotting style \code{style=2} invokes the command 
-  \code{pannel_j_plot} that creates a panel lower-triangular, 
-  including diagonal, where the data in \code{x} is plotted for 
-  each channel pair for the specified level \code{j}. If called 
-  via the command \code{plot.mvLSW} then the information argument 
-  must be \code{info=j}.
+  Plotting style \code{style=2} with information \code{info=j} 
+  creates a set of plots from \code{x} for all channel pairs in a 
+  lower-triangular pannel corresponding to the specified level $j$.
+  If \code{diag=FALSE} then the plots along the diagonal are suppressed,
+  which is ideal when \code{x} contain coherence estimates.
 
-  Plotting style \code{style=3} invokes the command 
-  \code{pannel_pq_plot} that generates a panel of plots that 
-  relate to the channel pair \code{p} and \code{q} for all levels from 
-  fine to coarse. Id called via \code{plot.mvLSW} then the information 
-  argument must be \code{info=c(p,q)}.
+  Plotting style \code{style=3} with information \code{info=c(p,q)}
+  creates a set of plots from \code{x} for all levels (from fine 
+  to coarse) for channel pair \code{p} and \code{q}.
   
-  Finally, the plotting style \code{style=4} involves the command 
-  \code{matrix_j_plot} that subsequently calls \code{image.plot}
-  from the \code{fields} library. A plot of the data 
-  from the previous case (\code{style=3}) is generated but 
-  in a compact matrix format.
+  Finally, the plotting style \code{style=4} with information 
+  \code{info=j} presents the same infromation from \code{x} as
+  for the previous case, bit in a compact matrix format. Please 
+  refer to \code{image.plot} from the \code{fields} library for 
+  additional information on this plotting style.
   
   Both arguments \code{Int.lower} and \code{Int.upper} must be supplied 
-  in order to draw a polygon to indicate the interval estimate.
+  in order to draw a polygon to indicate the interval estimate. These 
+  arguments are ignored in the case \code{style=4}.
 }
 
 \value{
@@ -86,9 +64,8 @@
 }
 
 \seealso{
-  \code{hsv}, \code{layout}, \code{par}, \code{plot.default}, 
-  \code{image.plot}, \code{\link{mvLSW}}, \code{\link{mvEWS}}, 
-  \code{\link{coherence}}, \code{tim.colors}.
+  \code{plot.default}, \code{image.plot}, \code{\link{as.mvLSW}}, 
+  \code{\link{mvEWS}}, \code{\link{coherence}}.
 }
 
 \examples{
@@ -100,7 +77,7 @@ Spec[3, 3, 2, ] <- c(rep(2, 128), rep(8, 128))
 Spec[2, 1, 2, ] <- Spec[1, 2, 2, ] <- c(rep(0, 64), seq(0, 1, len = 128), rep(1, 64))
 Spec[3, 1, 2, ] <- Spec[1, 3, 2, ] <- c(rep(-1, 128), rep(5, 128))
 Spec[3, 2, 2, ] <- Spec[2, 3, 2, ] <- -0.5
-EWS <- mvLSW(spectrum = Spec, filter.number = 1, family = "DaubExPhase",
+EWS <- as.mvLSW(x = Spec, filter.number = 1, family = "DaubExPhase",
   min.eig.val = NA)
 
 ## Sample time series and estimate the EWS and coherence.

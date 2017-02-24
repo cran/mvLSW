@@ -3,19 +3,9 @@
 #include<math.h>
 #include<R.h>
 #include<Rinternals.h>
+#include<R_ext/Rdynload.h>
 
-void SmoothEWS( 
-	double *pData, 		//TxN matrix (vectorized) containing data to smooth
-	int *pT, 		//Length of periodogram to smooth
-	int *pN, 		//Number of periodograms to smooth
-	int *pM, 		//Bandwidth parameter (# of weights either side of the centre)
-	double *pWts, 		//Smoothing kernel weights
-	int *pContribute,	//Vector length N: 1 -> calculate score, otherwise -> don't 
-	double *pEps, 		//Tolerance to apply to smoothed periodogram
-	double *pScore, 	//RETURN: GCV-score
-	int *pErr 		//RETURN: error code
-		);
-
+/* .C calls */
 void PsiJl(
 	double *ppsi, 	//Wavelet function vector
 	int *pL, 	//Length of ppsi
@@ -40,14 +30,6 @@ void PsiJL(
 	int *pErr	//RETURN: Error code
 		);
 
-void AutoCorr(
-	double *ppsi, 	//Wavelet function vector
-	int *pL, 	//Length of ppsi
-	int *pJ, 	//Number of levels
-	double *pPsiJL, //RETURN: Wavelet AutoCor fn at all levels
-	int *pErr	//RETURN: Error Code
-		);
-
 void A_lam_jlh(
 	double *pPsi_jl,	//Wavelet autocorrelation between levels j & l
 	int *pminjl,		//Location of lowest non-0 in pPsi_jl
@@ -59,29 +41,6 @@ void A_lam_jlh(
 	double *pA		//RETURN: Wavelet autocorr inner product, A^{\lambda}_{j,l,h}
 		);
 		
-void WaveCorrInnerProd(
-	double *pPsi,		//Wavelet autocorrelation values (vectorized (2L+1)xJxJ array)
-	int *pmin,		//Length J index vector place of lowest non-0 in pPsi per level pair
-	int *pmax,		//Length J index vector place of higher non-0 in pPsi per level pair
-	int *pL,		//2L+1 is the length of the vector pPsi_jl
-	int *pJ,		//Number of levels
-	double *pWACIP,		//RETURN: Wave. AutoCor. Inner Prod. (vectorized (2L+1)xJxJxJ array)
-	int *pErr		//RETURN: error code
-		);
-
-void SmoothCovEst(
-	double *pSpq,		//Wavelet cross spectrum between series p&q (vectorized TxJ matix)
-	double *pSpp,		//Wavelet spectrum of series p (vectorized TxJ matix)
-	double *pSqq,		//Wavelet spectrum of series q (vectorized TxJ matix)
-	double *pWACIP,		//Wavelet AutoCorr. Inner Product (vectorizd (2T+1)xJxJxJ array)
-	int *pJ,		//Number of levels
-	int *pT,		//Time series length
-	int *pM,		//Smooth kernel bandwidth parameter
-	double *pWts,		//Smoothing kernel weights
-	double *pSmoothCov,	//RETURN: Smoothed covariance matrices (vectorized TxJxJ array)
-	int *pErr		//RETURN: Error code
-		);
-	
 void E_dpjk_dqlm(
 	double *pSpec,	//Wavelet (Cross-) Spectrum
 	double *pWACIP,	//Wavelet Autocorrelation Inner Product
@@ -152,7 +111,7 @@ void FillCovMatrix(
 
 //Smooth the Evolutionary wavelet spectrum and the Generalized Cross-Validation 
 //  gamma deviance criterion(CALLED FROM R)
-void SmoothEWS(
+extern  void SmoothEWS(
 	double *pData,		//TxN matrix (vectorized) containing data to smooth
 	int *pT,		//Length of periodogram to smooth
 	int *pN,		//Number of periodograms to smooth
@@ -355,7 +314,7 @@ void PsiJL(
 
 // Wavelet Auto-correlation Function Between All Level Pairs 
 //  - envelope command (CALLED FROM R)
-void AutoCorr(
+extern  void AutoCorr(
 	double *ppsi, 	//Wavelet function vector
 	int *pL, 	//Length of ppsi
 	int *pJ, 	//Number of levels
@@ -423,7 +382,7 @@ void A_lam_jlh(
 }
 
 // Wavelet Auto-correlation Inner Product - All cases (CALLED FROM R)
-void WaveCorrInnerProd(
+extern  void WaveCorrInnerProd(
 	double *pPsi,	//Wavelet autocorrelation values (vectorized (2L+1)xJxJ array)
 	int *pmin,	//Length J index vector place of lowest non-0 in pPsi per level pair
 	int *pmax,	//Length J index vector place of higher non-0 in pPsi per level pair
@@ -470,7 +429,7 @@ void WaveCorrInnerProd(
 //###########################################################################
 
 //Sequence of smoothed periodogram covariance matries at all locations (CALLED FROM R)
-void SmoothCovEst(
+extern void SmoothCovEst(
 	double *pSpq,		//Wavelet cross spectrum between series p&q (vectorized TxJ matix)
 	double *pSpp,		//Wavelet spectrum of series p (vectorized TxJ matix)
 	double *pSqq,		//Wavelet spectrum of series q (vectorized TxJ matix)
@@ -732,5 +691,35 @@ void FillCovMatrix(
 		}
 	}
 	return;
+}
+
+/*static R_NativePrimitiveArgType SmoothEWS_t[] = {
+  REALSXP,INTSXP,INTSXP,INTSXP,REALSXP,INTSXP,REALSXP,REALSXP,INTSXP
+};
+
+static R_NativePrimitiveArgType AutoCorr_t[] = {
+  REALSXP,INTSXP,INTSXP,REALSXP,INTSXP
+};
+static R_NativePrimitiveArgType WaveCorrInnerProd_t[] = {
+  REALSXP,INTSXP,INTSXP,INTSXP,INTSXP,REALSXP,INTSXP
+};
+static R_NativePrimitiveArgType SmoothCovEst_t[] = {
+  REALSXP,REALSXP,REALSXP,REALSXP,INTSXP,INTSXP,INTSXP,REALSXP,REALSXP,INTSXP
+};
+*/
+
+
+static const R_CMethodDef CEntries[] = {
+    {"AutoCorr",          (DL_FUNC) &AutoCorr,           5},
+    {"SmoothCovEst",      (DL_FUNC) &SmoothCovEst,      10},
+    {"SmoothEWS",         (DL_FUNC) &SmoothEWS,          9},
+    {"WaveCorrInnerProd", (DL_FUNC) &WaveCorrInnerProd,  7},
+    {NULL, NULL, 0}
+};
+
+void R_init_mvLSW(DllInfo *dll)
+{
+    R_registerRoutines(dll, CEntries, NULL, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
 

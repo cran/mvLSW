@@ -1,21 +1,26 @@
 % File src/library/base/man/rmvLSW.Rd
 \name{rmvLSW}
 \alias{rmvLSW}
+\alias{simulate.mvLSW}
 \title{Sample a Multivariate Locally Stationary Wavelet Process}
 \description{
   Sample a Multivariate Locally Stationary Wavelet Process.
 }
 \usage{
   rmvLSW(Transfer = NULL, Spectrum = NULL, noiseFN = rnorm, ...)
+  \method{simulate}{mvLSW}(object, nsim = 1, seed = NULL, ...)
 }
 
 \arguments{
   \item{Transfer}{A \code{mvLSW} object containing the set of 
     transfer function matrices of the process.}
-  \item{Spectrum}{A \code{mvLSW} object containing the evolutionary 
-    wavelet spectrum of the process. This argument is only used if 
-	\code{Transfer} is not supplied.}
+  \item{Spectrum, object}{A \code{mvLSW} object containing the 
+    evolutionary wavelet spectrum of the process. This argument 
+    is only used if \code{Transfer} is not supplied.}
   \item{noiseFN}{The function for sampling the innovations.}
+  \item{nsim}{Number of mvLSW time series to draw. Only 
+    \code{nsim = 1} is accepted.}
+  \item{seed}{Seed for the random number generator.}
   \item{...}{Optional arguments to be passed to \code{noiseFN}.}
 }
 
@@ -36,7 +41,9 @@
   of \code{noiseFN} must be \code{n} and define the number of samples 
   to generate. The function must also return a numerical vector 
   of length \code{n}.
-
+  
+  The \code{simulate} command implements \code{rmvLSW} under default 
+  arguments unless specified via \code{...}.
 }
 
 \value{
@@ -68,7 +75,7 @@ Spec[3, 1, 2, ] <- Spec[1, 3, 2, ] <- c(rep(-1, 128), rep(5, 128))
 Spec[3, 2, 2, ] <- Spec[2, 3, 2, ] <- -0.5
 
 ## Define Haar wavelet function and create mvLSW object
-EWS <- mvLSW(spectrum = Spec, filter.number = 1, family = "DaubExPhase",
+EWS <- as.mvLSW(x = Spec, filter.number = 1, family = "DaubExPhase",
   min.eig.val = NA)
 plot(EWS, style = 2, info = 2)
 
@@ -77,8 +84,12 @@ set.seed(10)
 X <- rmvLSW(Spectrum = EWS)
 plot(X)
 
+## Alternatively:
+X1 <- simulate(object = EWS)
+plot(X1)
+
 ## Define smoother wavelet function and create mvLSW object
-EWS2 <- mvLSW(spectrum = Spec, filter.number = 10, family = "DaubExPhase")
+EWS2 <- as.mvLSW(x = Spec, filter.number = 10, family = "DaubExPhase")
 
 ## Sample with logisitc innovations
 set.seed(10)
@@ -86,4 +97,4 @@ X2 <- rmvLSW(Spectrum = EWS2, noiseFN = rlogis, scale = sqrt(3)/pi)
 plot(X2)
 }
 
-\keyword{rmvLSW}
+\keyword{rmvLSW, simulate.mvLSW}

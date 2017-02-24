@@ -4,8 +4,8 @@
 
 ### Multivariate Locally Stationary Wavelet class ###
 
-mvLSW <- function(
-  spectrum, 
+as.mvLSW <- function(
+  x, 
   filter.number = 1, 
   family = "DaubExPhase",
   smooth.type = "all", 
@@ -15,6 +15,7 @@ mvLSW <- function(
   names = NULL
  ){
 
+  spectrum <- x
   ##spectrum - value type and dimension
   if(class(spectrum) != "array") stop("'spectrum' is not a numerical array.") 
   Dim <- dim(spectrum)
@@ -58,6 +59,9 @@ mvLSW <- function(
     Information = list(names = names, dimensions = dimensions, wavelet = wavelet, 
 	  smooth = smooth.info, correction = correction))
   class(object) <- append(class(object), "mvLSW")
+  
+  attr(object,"time") <- seq(from=0, by=1/Dim[4], len=Dim[4])
+
   invisible(object)
 }
 
@@ -223,8 +227,15 @@ single_pqj_plot <- function(
 
   #check object is a mvLSW object
   if(!is.mvLSW(object)) stop("Invalid 'object' argument.")
-  Rescale <- seq(from=0, len=object$Information$dimensions$T, 
-    by=1/object$Information$dimensions$T)
+  if(is.null(attr(object,"time"))){
+    Rescale <- seq(from=0, len=object$Information$dimensions$T, 
+      by=1/object$Information$dimensions$T)
+  }else{
+    Rescale <- attr(object,"time")
+	if(!any(class(Rescale)=="POSIXt")){
+	  Rescale <- as.vector(Rescale)
+	}
+  }
   
   #check p, q & j arguments
   if(!is.numeric(p) || length(p) != 1) stop("Invalid 'p' argument.")
@@ -270,11 +281,18 @@ single_pqj_plot <- function(
   
   #check ylab, xlab and xlim arguments supplied via ellipses
   if(!("ylab" %in% names(ellipses))) ellipses$ylab <- "Spectrum"
-  if(!("xlab" %in% names(ellipses))) ellipses$xlab <- "Rescaled Time"
-  if(!("xlim" %in% names(ellipses))) ellipses$xlim <- c(0,1)
+  if(!("xlab" %in% names(ellipses))) ellipses$xlab <- "Time"#"Rescaled Time"
+  if(!("xlim" %in% names(ellipses))){
+    if(is.null(attr(object,"time"))){
+	  ellipses$xlim <- c(0,1)
+	}else{
+	  ellipses$xlim <- range(Rescale)
+	}
+  } 
 
   #Create plot
-  do.call(plot, c(list(x=NA,y=NA,type="n"),ellipses))
+  do.call(plot, c(list(x=Rescale,y=rep(ellipses$ylim[1],length(Rescale)),
+    type="n"),ellipses))
   grid(col="grey60")
   if(Interval){
     #Add intervals if available
@@ -336,9 +354,8 @@ panel_j_plot <- function(
 	}
     ellipses$ylim <- ylim
   }
-  if(!("xlim" %in% names(ellipses))) ellipses$xlim <- c(0,1)
   if("ylab" %in% names(ellipses)){ YLAB <- ellipses$ylab } else{ YLAB <- "Spectrum" }
-  if("xlab" %in% names(ellipses)){ XLAB <- ellipses$xlab } else{ XLAB <- "Rescaled Time" }
+  if("xlab" %in% names(ellipses)){ XLAB <- ellipses$xlab } else{ XLAB <- "Time" }
   ellipses$xlab <- ""
   ellipses$ylab <- ""
   ellipses$yaxt <- "s"
@@ -384,7 +401,7 @@ panel_pq_plot <- function(
 
   #check object is a mvLSW object
   if(!is.mvLSW(object)) stop("Invalid 'object' argument.")
-
+  
   #check p & q arguments
   if(!is.numeric(p) || length(p) != 1) stop("Invalid 'p' argument.")
   if(p%%1 != 0 || p<1 || p > object$Information$dimensions$P) stop("Invalid 'p' argument.")
@@ -468,15 +485,25 @@ matrix_j_plot <- function(
   #Create plot
   Matrix <- t(object$spectrum[p, q, , ])
   T <- object$Information$dimension$T
-  Rescale <- seq(from = 0.5/T, len = T, by = 1/T)
+  if(is.null(attr(object,"time"))){
+    Rescale <- seq(from = 0.5/T, len = T, by = 1/T)
+  }else{
+    Rescale <- as.vector(attr(object,"time"))
+  }
   J <- object$Information$dimension$J
 
   par.format <- par(no.readonly = TRUE)
   par(mfrow=c(1, 1))
   if(!("ylim" %in% names(ellipses))) ellipses$ylim <- c(0, J) + 0.5
-  if(!("xlim" %in% names(ellipses))) ellipses$xlim <- c(0, 1)
+  if(!("xlim" %in% names(ellipses))){
+    if(is.null(attr(object,"time"))){
+      ellipses$xlim <- c(0, 1)
+	}else{
+	  ellipses$xlim <- range(attr(object,"time"))
+	}
+  }
   if(!("ylab" %in% names(ellipses))) ellipses$ylab <- "Level"
-  if(!("xlab" %in% names(ellipses))) ellipses$xlab <- "Rescaled Time"
+  if(!("xlab" %in% names(ellipses))) ellipses$xlab <- "Time"#"Rescaled Time"
   if("main" %in% names(ellipses)){ MAIN <- ellipses$main }else{ MAIN <- "" }
   ellipses$main <- ""
   do.call(image.plot, c(list(x = Rescale, y = 1:J, z = Matrix), ellipses))
@@ -556,7 +583,18 @@ mvEWS <- function(
   verbose = FALSE){
   
   ##Check arguments
-  if(!is.ts(X) && !is.matrix(X)) stop("Invalid 'X' argument.")
+  if(!is.matrix(X)) stop("Invalid 'X' argument")
+  if(is.ts(X)){
+    TIME <- time(X)
+  }else if(is.zoo(X) || is.xts(X)){
+    TIME <- time(X)
+	X <- as.ts(X)
+  }else if(is.matrix(X)){
+    TIME <- 1:nrow(X)
+	X <- as.ts(X)
+  }else{
+    stop("Invalid 'X' argument")
+  }
   if(any(is.na(X)) || !is.numeric(X)) stop("Invalid 'X' argument.")
   if(ncol(X) == 1) stop("'X' is univariate! Refer to the 'wavethresh' library.")
   if(log2(nrow(X))%%1 != 0) stop("Invalid length of 'X'.")
@@ -605,13 +643,13 @@ mvEWS <- function(
   #Calculate the raw wavelet periodogram
   if(verbose) cat("Calculating the raw wavelet periodogram.\n")
   RawPeriod <- RawPeriodogram(X, filter.number = filter.number, family = family, FALSE)
-
+  
   if(smooth){
     if(verbose) cat("Smoothing periodogram - type:", type, "\n")
     #Smooth periodogram
     if(type == "all"){ #Smooth all levels collectively
       #Make mvLSW object
-      EWS <- mvLSW(spectrum = RawPeriod, filter.number = filter.number, 
+      EWS <- as.mvLSW(x = RawPeriod, filter.number = filter.number, 
         family = family, smooth.type = "all", smooth.kernel = kernel("daniell", 0), 
         bias.correct = FALSE, min.eig.val = -Inf, names = colnames(X))
       EWS <- Smooth_EWS(EWS, kernel.name, kernel.param, optimize, 
@@ -619,7 +657,7 @@ mvEWS <- function(
     }else{ 
       #Smooth on a by-level basis
       #Make mvLSW object
-      EWS <- mvLSW(spectrum = RawPeriod, filter.number = filter.number, family = family,
+      EWS <- as.mvLSW(x = RawPeriod, filter.number = filter.number, family = family,
         smooth.type = "by.level", smooth.kernel = kernel("daniell", 0),
         bias.correct = FALSE, min.eig.val = -Inf, names = colnames(X))
       J <- EWS$Information$dimension$J
@@ -634,7 +672,7 @@ mvEWS <- function(
     }
   }else{ #Do not apply smoothing
     #Make mvLSW object
-    EWS <- mvLSW(spectrum = RawPeriod, filter.number = filter.number, family = family,
+    EWS <- as.mvLSW(x = RawPeriod, filter.number = filter.number, family = family,
       smooth.type = "all", smooth.kernel = kernel("daniell", 0), 
       bias.correct = FALSE, names = colnames(X))
   }
@@ -646,7 +684,7 @@ mvEWS <- function(
   #Adjust to positive-definite matrix
   if(verbose && !is.na(tol)) cat("Adjustment for positive definiteness.\n")
   if(!is.na(tol)) EWS <- AdjPositiveDef(EWS, tol)
-
+  attr(EWS,"time") <- TIME
   invisible(EWS)
 }
  
@@ -658,7 +696,18 @@ RawPeriodogram <- function(
   family = "DaubExPhase",
   format = TRUE){
 
-  if(!is.ts(X) && !is.matrix(X)) stop("Invalid 'X' argument.")
+  if(!is.matrix(X)) stop("Invalid 'X' argument")
+  if(is.ts(X)){
+    TIME <- time(X)
+  }else if(is.zoo(X) || is.xts(X)){
+    TIME <- time(X)
+	X <- as.ts(X)
+  }else if(is.matrix(X)){
+    TIME <- 1:nrow(X)
+	X <- as.ts(X)
+  }else{
+    stop("Invalid 'X' argument")
+  }
   if(any(is.na(X)) || !is.numeric(X)) stop("Invalid 'X' argument.")
   P <- ncol(X)
   if(P == 1) stop("'X' is univariate! Refer to the 'wavethresh' library.")
@@ -690,9 +739,10 @@ RawPeriodogram <- function(
     }
   }
   if(format){
-    RawPeriod <- mvLSW(spectrum = Periodogram, filter.number = filter.number, family = family,
+    RawPeriod <- as.mvLSW(x = Periodogram, filter.number = filter.number, family = family,
       smooth.type = "all", smooth.kernel = kernel("daniell", 0), 
       bias.correct = FALSE, min.eig.val = -Inf, names = colnames(X))
+	attr(object,"time") <- TIME
     invisible(RawPeriod)
   }else{
     invisible(Periodogram)
@@ -905,7 +955,7 @@ Smooth_GCV <- function(
     Contribute = as.integer(Contribute),
     eps = as.double(.Machine$double),
     GCV = as.double(0.0),
-    ErrorCode = as.integer(0L)
+    ErrorCode = as.integer(0L), PACKAGE = "mvLSW"
   )
 
   if(Smoothed$ErrorCode != 0L){
@@ -1019,7 +1069,20 @@ rmvLSW <- function(
   Sample <- apply(Epsilon, 1, Transform, object$Information$dimension$T,
     object$Information$wavelet)
   colnames(Sample) <- object$Information$names
-  return(as.ts(Sample))
+  
+  if(!is.null(attr(object,"time"))){
+    TIME <- attr(object,"time")
+  }else{
+    TIME <- NULL
+  }
+  if(any(class(TIME)=="POSIXt")){
+    TSsample <- zoo(x=Sample,order.by=TIME)
+  }else if(is.ts(TIME)){
+    TSsample <- ts(data=Sample,start=start(TIME),frequency=frequency(TIME))
+  }else{
+    TSsample <- ts(data=Sample,start=1,frequency=1)
+  }
+  return(TSsample)
 }
 
 ### Convert Spectrum Matrices to Transfer Matrices & visa versa ###
@@ -1121,7 +1184,7 @@ PsiJLmat <- function(
 	L = as.integer(L), 
 	J = as.integer(J), 
     PsiJL = vector("double", J * J * (2 * L + 1)),
-	ErrorCode = 0L)
+	ErrorCode = 0L, PACKAGE = "mvLSW")
   
   if(AutoCorr$ErrorCode != 0L){
     cat("If you see this message then an problem has occured in executing the command.\n")
@@ -1163,7 +1226,7 @@ AutoCorrIP<- function(
     L = as.integer(L),
     J = as.integer(J),
     A = vector("double", (2 * L + 1) * J * J * J),
-    ErrorCode = 0L
+    ErrorCode = 0L, PACKAGE = "mvLSW"
   )
   
   if(AutoCorr$ErrorCode != 0){
@@ -1295,7 +1358,7 @@ VarSpqJ <- function(
     M = as.integer(kernel$m),
     Wts = as.double(Wts),
     SmoothCovEst = vector("double", T * J * J),
-    ErrorCode = 0L
+    ErrorCode = 0L, PACKAGE = "mvLSW"
   )
 
   if(SmoothCovEst$ErrorCode != 0L){
@@ -1505,12 +1568,12 @@ AdjPositiveDef <- function (object, tol = 1e-10)
         stop("Invalid 'tol' argument.")
     POSDEF_single <- function(SqMat, tol) {
         Eig <- eigen(SqMat, symmetric=TRUE)
-        if (all(Eig$values > 0)) 
+        if (all(Eig$values > tol)) 
             return(list(Mat = SqMat, minEval = min(Eig$values)))
         SqMatB <- try(PosDefEst(SqMat, tol), silent = TRUE)
         if (class(SqMatB) != "try-error" && !is.null(SqMatB)) {
           EigB <- eigen(SqMatB, symmetric=TRUE)
-          if (all(EigB$values > 0)) 
+          if (all(EigB$values > tol)) 
               return(list(Mat = SqMatB, minEval = min(EigB$values)))
         }
         Eig$values[Eig$values < tol] <- tol
@@ -1527,5 +1590,38 @@ AdjPositiveDef <- function (object, tol = 1e-10)
     }
     object$Information$correction$min.eig.val <- Min
     return(object)
+}
+
+########
+## print, runs summary command
+print.mvLSW <- function(x, ...){
+  f <- function(x, txt){
+    if(is.list(x)){
+      n <- length(x)
+      for(i in 1:n){
+        na <- names(x)[i]
+        txt <- paste0(txt,"$",na)
+        f(x[[i]], txt)
+        p <- gregexpr("[$]",txt)[[1]]
+        p <- p[length(p)]
+        txt <- substr(txt,1,p-1)
+      }
+    }else{
+      cat("                  ",txt,"\n")
+    }
+  }
+  
+  cat("Class 'mvLSW' : Multivariate Locally Stationary Wavelet Object:\n")
+  cat("       ~~~~~  : List with component names\n")
+  f(x,"x")
+  cat("\nsummary(.):\n----------\n")
+  summary.mvLSW(object = x, ...)
+}
+
+## simulate, sample a mv time series from a given mvEWS
+simulate.mvLSW <- function(object, nsim = 1, seed = NULL, ...){
+  if(nsim!=1) stop("Can only simulate a single mvLSW time series at a time.")
+  if(!is.null(seed)) set.seed(seed)
+  return(rmvLSW(Spectrum = object, ...))
 }
 

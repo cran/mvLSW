@@ -1,7 +1,6 @@
 % File src/library/base/man/Autocorrelation.Rd
 \name{Autocorrelation}
 \alias{Autocorrelation}
-\alias{PsiJLmat}
 \alias{AutoCorrIP}
 \title{Wavelet Autocorrelation Functions}
 \description{
@@ -10,8 +9,6 @@
   associated inner product.
 }
 \usage{
-  PsiJLmat(J, filter.number = 1, family = "DaubExPhase")
-  
   AutoCorrIP(J, filter.number = 1, family = "DaubExPhase", crop = TRUE)
 }
 
@@ -47,18 +44,12 @@
 }
 
 \value{
-  \item{PsiJLmat}{A 3D array (invisibly returned) of order LxJxJ 
-    where L depends on the specified wavelet function. The first 
-	dimension defines the offset \eqn{\tau}, whilst the second 
-	and third dimensions identify the levels indexed by j and l 
-	respectively.}
-  
-  \item{AutoCorrIP}{A 4D array (invisibly returned) of order 
+    A 4D array (invisibly returned) of order 
     LxJxJxJ where L depends on the specified wavelet function. 
 	If \code{crop=TRUE} then L=\eqn{2^{J+1}}+1. The first dimension 
 	defines the offset \eqn{\lambda}, whilst the second to 
 	fourth dimensions identify the levels indexed by j, l & h 
-	respectively.}
+	respectively.
 }
 
 \references{
@@ -72,17 +63,6 @@
 }
 
 \examples{
-## Plot Haar Autocorrelation wavelet functions at top 3 coarse levels
-AutoCorrFns <- PsiJLmat(J = 8, filter.number = 1, family = "DaubExPhase")
-MaxOffset <- (dim(AutoCorrFns)[1] - 1) / 2
-par(mfrow=c(3, 3))
-for(l in 6:8){
-  for(j in 6:8){
-    plot(-MaxOffset:MaxOffset, AutoCorrFns[, j, l], type = "l", xlab = "tau",
-      ylab = "Autocorrelation", main = paste("j :", j, "- l :", l), ylim=c(-1, 1))
-  }
-}
-
 ## Plot Haar autocorrelation wavelet functions inner product
 AInnProd <- AutoCorrIP(J = 8, filter.number = 1, family = "DaubExPhase")
 \dontrun{

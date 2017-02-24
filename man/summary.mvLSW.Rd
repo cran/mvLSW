@@ -1,17 +1,19 @@
 % File src/library/base/man/summary.mvLSW.Rd
 \name{summary.mvLSW}
 \alias{summary.mvLSW}
-\title{Summary of mvLSW Object}
+\alias{print.mvLSW}
+\title{Print a summary of mvLSW Object}
 \description{
   Prints a summary of the information contained within a \code{mvLSW} 
   classed object.
 }
 \usage{
   \method{summary}{mvLSW}(object, ...)
+  \method{print}{mvLSW}(x, ...)
 }
 
 \arguments{
-  \item{object}{A \code{mvLSW} object.}
+  \item{object, x}{A \code{mvLSW} object.}
   \item{...}{Additional arguments.}
 }
 
@@ -29,7 +31,7 @@
 }
 
 \seealso{
-  \code{\link{mvEWS}}, \code{\link{mvLSW}}.
+  \code{\link{mvEWS}}, \code{\link{as.mvLSW}}.
 }
 
 \examples{
@@ -44,7 +46,8 @@ X <- as.ts(X)
 ## Haar wavelet, apply same smoothing to all levels & optimize
 EWS <- mvEWS(X, kernel.name = "daniell", kernel.param = 20, optimize = TRUE)
 summary(EWS)
+print(EWS)
 plot(EWS, style = 2, info = 1)
 }
 
-\keyword{summary.mvLSW}
+\keyword{summary.mvLSW, print.mvLSW}

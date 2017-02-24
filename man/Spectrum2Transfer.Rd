@@ -47,7 +47,7 @@
 }
 
 \seealso{
-  \code{chol}, \code{\link{mvLSW}}, \code{\link{mvEWS}}.
+  \code{chol}, \code{\link{as.mvLSW}}, \code{\link{mvEWS}}.
 }
 
 \examples{
@@ -61,7 +61,7 @@ Spec[3, 1, 2, ] <- Spec[1, 3, 2, ] <- c(rep(-1, 128), rep(5, 128))
 Spec[3, 2, 2, ] <- Spec[2, 3, 2, ] <- -0.5
 
 ## Define EWS as mvLSW object
-EWS <- mvLSW(spectrum = Spec, filter.number = 1, family = "DaubExPhase",
+EWS <- as.mvLSW(x = Spec, filter.number = 1, family = "DaubExPhase",
   min.eig.val = NA)
 plot(EWS, style = 2, info = 2)
 

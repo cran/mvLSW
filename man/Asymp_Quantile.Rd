@@ -36,7 +36,7 @@
 }
 
 \seealso{
-  \code{\link{mvEWS}}, \code{\link{mvLSW}}, \code{\link{varEWS}}.
+  \code{\link{mvEWS}}, \code{\link{as.mvLSW}}, \code{\link{varEWS}}.
 }
 
 \examples{
@@ -48,7 +48,7 @@ Spec[3, 3, 2, ] <- c(rep(2, 128), rep(8, 128))
 Spec[2, 1, 2, ] <- Spec[1, 2, 2, ] <- c(rep(0, 64), seq(0, 1, len = 128), rep(1, 64))
 Spec[3, 1, 2, ] <- Spec[1, 3, 2, ] <- c(rep(-1, 128), rep(5, 128))
 Spec[3, 2, 2, ] <- Spec[2, 3, 2, ] <- -0.5
-EWS <- mvLSW(spectrum = Spec, filter.number = 1, family = "DaubExPhase", 
+EWS <- as.mvLSW(x = Spec, filter.number = 1, family = "DaubExPhase", 
   min.eig.val = NA)
 
 ## Sample time series and estimate the EWS.
