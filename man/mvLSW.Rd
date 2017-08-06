@@ -1,18 +1,18 @@
 % File src/library/base/man/mvLSW.Rd
 \name{mvLSW}
 \alias{mvLSW}
-\title{Multivaraite, Locally Stationary Wavelet Process Estimation}
+\title{Multivariate, Locally Stationary Wavelet Process Estimation}
 \description{
-  The mvLSW package provides an implementation of the multivaraite locally 
+  The mvLSW package provides an implementation of the multivariate locally 
   stationary time series modelling approach proposed by Park, Eckley and 
   Ombao (2014).
   
-  The approach extends the locally stationary wavelet timeseries work of 
+  The approach extends the locally stationary wavelet time series work of 
   Nason, von Sachs and Kroisandt (2000) to a multivariate setting, introducing 
-  wavelet-based measures of loval coherence and local partial coherence. The 
+  wavelet-based measures of local coherence and local partial coherence. The 
   package implements the estimation scheme by Park et al. (2014) for such 
   processes. Note that mvLSW should be used in conjunction with the 
-  \code{wavethresh} package developed by Nason (1998).
+  \code{wavethresh} package developed by Nason (2016).
 }
 
 \details{
@@ -20,11 +20,11 @@
   
   Type: Package
   
-  Version: 1.1
+  Version: 1.2
   
-  Date: 2017-01-30
+  Date: 2017-08-04
   
-  License: GPL(>=3.2)
+  License: GPL(>=3)
 }
 
 \author{
@@ -33,7 +33,7 @@
 
 \references{
   Park, T.A., Eckley, I. and Ombao, H.C. (2014) Estimating 
-  time-evolving partial coherence between signals via multivatiate 
+  time-evolving partial coherence between signals via multivariate 
   locally stationary wavelet processes \emph{IEEE Transactions on 
   Signal Processing} \strong{62}(20), pp. 5240--5250.
   
@@ -43,17 +43,19 @@
   \strong{62}, pp. 271--292.
 
   Nason, G. (2016) wavethresh: Wavelets Statistics and Transforms. 
-  R package version 4.6.8. https://CRAN.R-project.org/package=wavethresh
+  R package version 4.6.8. 
+  
+  https://CRAN.R-project.org/package=wavethresh
 }
 
 \seealso{
-  \code{mvEWS}, \code{coherence}, \code{rmvLSW}
+  \code{mvEWS}, \code{coherence}, \code{rmvLSW},
   \code{\link{as.mvLSW}}, \code{\link{mvEWS}}
 }
 
 \examples{
 #
-# See examples in indicidual help pages
+# See examples in individual help pages
 #
 }
 

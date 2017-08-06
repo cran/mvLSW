@@ -1,0 +1,15 @@
+##Changelog for mvLSW R package
+###############################
+Version 1.0 uploaded 23/02/2017
+
+-----------------------------------------------------------------------------------------------------------------------
+Version          | Decription                                                               | Suggested/Identified by
+-----------------------------------------------------------------------------------------------------------------------
+1.1 (24/02/2017) | Support time series classes "zoo" and "xts"                              | JSS reviewer
+                 | Add S3 print() and simulate() commands                                   | JSS reviewer
+                 | Remove internal only commands from NAMESPACE                             | JSS reviewer
+-----------------------------------------------------------------------------------------------------------------------
+1.2 (99/99/9999) | Correct error when tol=-Inf in mvEWS() to not apply regularisation       | Simon Taylor (authour)
+                 | Corrections and general edits to manual pages                            | JSS reviewer
+                 | Convert Asymp_Quantile to ApxCI, make appropriate edits to plot.mvLSW.   | JSS reviewer
+-----------------------------------------------------------------------------------------------------------------------

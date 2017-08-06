@@ -526,14 +526,24 @@ plot.mvLSW <- function(
   x, ## Same as 'object' - set as 'x' to be compatible with 'plot' command
   style = 1, 
   info = NULL, 
-  Int.lower = NULL, 
-  Int.upper = NULL, 
+  Interval = NULL,
   diag = TRUE,
   sub = "Spectrum",
   ...){
   
   if(!is.numeric(style) || length(style) != 1) stop("Invalid 'style' argument.")
-  
+
+  if(is.null(Interval)){
+    Int.lower = NULL
+    Int.upper = NULL
+  }else{
+    if(!is.list(Interval)) stop("Invalid 'Interval' argument.")
+	if(length(Interval) != 2) stop("Invalid 'Interval' argument.")
+	if(!all(c("L","U") %in% names(Interval))) stop("Invalid 'Interval' argument.")
+	Int.lower <- Interval$L
+	Int.upper <- Interval$U
+  }
+
   if(style == 1){
     #single plot
     if(is.null(info)) info <- c(1, 1, 1)
@@ -682,8 +692,8 @@ mvEWS <- function(
   if(bias.correct) EWS <- CorrectBias(EWS)
 
   #Adjust to positive-definite matrix
-  if(verbose && !is.na(tol)) cat("Adjustment for positive definiteness.\n")
-  if(!is.na(tol)) EWS <- AdjPositiveDef(EWS, tol)
+  if(verbose && tol>0) cat("Adjustment for positive definiteness.\n")
+  if(tol>0) EWS <- AdjPositiveDef(EWS, tol)
   attr(EWS,"time") <- TIME
   invisible(EWS)
 }
@@ -1379,8 +1389,8 @@ VarSpqJ <- function(
   return(VarSpqj)
 }
 
-## Asymptotic Quantiles
-Asymp_Quantile <- function(
+## Approximate Quantiles
+ApxQuantile <- function(
   object, 
   var = NULL, 
   prob = 0.5, 
@@ -1625,3 +1635,23 @@ simulate.mvLSW <- function(object, nsim = 1, seed = NULL, ...){
   return(rmvLSW(Spectrum = object, ...))
 }
 
+## Approximate pointwise confidence interval
+ApxCI <- function(
+  object, 
+  var = NULL, 
+  alpha = 0.05, 
+  ...){
+
+  if(!is.mvLSW(object)) stop("Invalid 'object' argument.")
+  if(is.null(var)){
+    var <- varEWS(object, ...)
+  }else{
+    if(!is.mvLSW(var)) stop("Invalid 'var' argument.")
+  }
+  if(length(alpha) != 1 || !is.numeric(alpha)) stop("invalid 'alpha' argument.")
+  if(alpha <= 0 || alpha > 0.5) stop("Invalid 'alpha' argument.")
+
+  L <- ApxQuantile(object, var, prob = alpha/2)  
+  U <- ApxQuantile(object, var, prob = 1 - (alpha/2))  
+  invisible( list( L = L, U = U ) )
+}

@@ -1,7 +1,7 @@
 % File src/library/base/man/coherence.Rd
 \name{coherence}
 \alias{coherence}
-\title{Wavelet Coherence}
+\title{Local Wavelet Coherence and Partial Coherence}
 \description{
   Wavelet coherence and partial coherence of an evolutionary 
   wavelet spectrum.
@@ -26,7 +26,7 @@
 
   where \eqn{D_{j,k} = diag\{ (S^{(p,p)}_{j,k})^{-0.5} : p=1,\ldots,P \}}.
   This measures the linear cross-dependence between different 
-  signals at a particular level. 
+  channels at a particular level. 
 
   Notate the inverse spectrum matrix as \eqn{G_{j,k} = S^{-1}_{j,k}}, 
   then the partial coherence matrix for level j and location k is 
@@ -35,12 +35,12 @@
   \deqn{\Gamma_{j,k} = -H_{j,k} G_{j,k} H_{j,k}}
 
   where \eqn{H_{j,k} = diag\{ (G^{(p,p)}_{j,k})^{-0.5} : p=1,\ldots,P \}}.
-  This measures the coherence between signals after removing the 
-  linear effects if all other signals and so enable the distinction 
-  between direct and indirect linear dependency between signals.
+  This measures the coherence between channels after removing the 
+  linear effects if all other channels and so enable the distinction 
+  between direct and indirect linear dependency between channels.
   
-  For valid calculations of (partial) coherence, it is important that
-  the spectral matrices are positive definite.
+  For valid calculations of (partial) coherence, values within [-1,1], 
+  it is important that the spectral matrices are positive definite.
 }
 
 \value{
@@ -78,7 +78,7 @@ plot(RHO, style = 2, info = 1, ylab = "Coherence", diag = FALSE)
 ## Partial Coherence
 PRHO <- coherence(EWS, partial = TRUE)
 plot(PRHO, style = 2, info = 1, ylab = "P. Coh.", diag = FALSE) 
-  #series 2&3 are closer to 0
+#series 2&3 are closer to 0
 }
 
 \keyword{coherence}

@@ -14,7 +14,7 @@ export(rmvLSW)
 export(Spectrum2Transfer)
 export(AutoCorrIP)
 export(varEWS)
-export(Asymp_Quantile)
+export(ApxCI)
 import(wavethresh)
 import(fields)
 

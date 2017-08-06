@@ -2,7 +2,7 @@
 \name{summary.mvLSW}
 \alias{summary.mvLSW}
 \alias{print.mvLSW}
-\title{Print a summary of mvLSW Object}
+\title{Print a Summary of mvLSW Object}
 \description{
   Prints a summary of the information contained within a \code{mvLSW} 
   classed object.
@@ -23,7 +23,7 @@
   includes: dimensions, wavelet function, the smoothing regime 
   applied, smoothing kernel(s), generalized cross-validation 
   gamma deviance criteria score, application of the bias correction 
-  and minimum eigenvalue from across all spectral matries.
+  and minimum eigenvalue from across all spectral matrices.
 }
 
 \value{
@@ -44,7 +44,8 @@ X[-(1:2^7), 1] <- X[-(1:2^7), 1] * 4
 X <- as.ts(X)
 
 ## Haar wavelet, apply same smoothing to all levels & optimize
-EWS <- mvEWS(X, kernel.name = "daniell", kernel.param = 20, optimize = TRUE)
+EWS <- mvEWS(X, kernel.name = "daniell", kernel.param = 20,
+  optimize = TRUE)
 summary(EWS)
 print(EWS)
 plot(EWS, style = 2, info = 1)

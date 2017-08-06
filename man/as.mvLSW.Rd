@@ -16,9 +16,9 @@
 
 \arguments{
   \item{x}{4D array of order PxPxJxT where P is the number of 
-    signals of the time series of length T such that T=\eqn{2^J} for 
+    channels of the time series of length T such that T=\eqn{2^J} for 
     some positive integer J defining the levels of the mvLSW object.}
-  \item{family}{Specifies the family of wavelet. Only two 
+  \item{family}{Character string specifying the wavelet family. Only two 
     options are available, either \code{"DaubExPhase"} (default) 
 	or \code{"DaubLeAsymm"}.}
   \item{filter.number}{Integer number defining the number of 
@@ -35,9 +35,9 @@
   \item{min.eig.val}{Minimum eigenvalue from spectral matrices across 
     all levels and locations, set at \code{-Inf} by default. If \code{NA},
 	then the minimum eigenvalue is calculated.}
-  \item{names}{Character vector containing the signal names of the 
+  \item{names}{Character vector containing the channel names of the 
     multivariate time series.}
-  \item{object}{An R object.}
+  \item{object}{Any R object.}
 }
 
 \details{
@@ -55,34 +55,41 @@
   following items:
   \item{spectrum}{A 4D array containing the data relating to the 
     estimate of interest.}
-  \item{Information}{List containing information about the 
-    estimate relating to the methodology.}
+  \item{Information}{List containing information on the 
+    estimation procedure.}
   
   The list \code{Information} contains:
-  \item{names}{Character vector containing the signal names.}
+  \item{names}{Character vector containing the channel names.}
   \item{dimensions}{A list containing items \code{P} - the number 
-    of signals forming of the time series, \code{T} - the length 
+    of channels forming of the time series, \code{T} - the length 
 	of the time series and \code{J} - the number of levels in the 
 	wavelet transform of the data.}
   \item{wavelet}{A list containing the \code{filter.number} and 
     \code{family} of the wavelet used in the transformation.}
-  \item{smooth}{A list containing information about the smoothing 
-    applied to the estimate. Items of the list are: 
-	\code{smooth.type} - name of the smoothing regime, 
-	\code{smooth.kernels} - a \code{tskernel} class from the 
-	command \code{kernel}, \code{GCV} - generalized cross-validation 
-	gamma deviance criterion of the smoothing and \code{smooth.eps} - 
-	smoothing threshold. If \code{smooth.type="by.level"}, then 
-	\code{smooth.kernels} is a list containing the \code{tskernel} 
-	object for each level from fine to coarse. In addition, 
-	\code{GCV} is a length J vector containing the criterion 
-	estimate for each level from fine to coarse.}
+  \item{smooth}{A list detailing applied smoothing of the estimate. 
+    Items include: 
+	
+    \code{  smooth.type} - name of the smoothing regime.
+	
+    \code{  smooth.kernels} - a \code{tskernel} class from the 
+	command \code{kernel()}.
+	
+    \code{  GCV} - generalized cross-validation 
+	gamma deviance criterion of the smoothing.
+	
+    \code{  smooth.eps} - smoothing threshold. 
+	
+    If \code{smooth.type="by.level"}, then 
+    \code{smooth.kernels} is a list containing the \code{tskernel} 
+    object for each level from fine to coarse. In addition, 
+    \code{GCV} is a length J vector containing the criterion 
+    estimate for each level from fine to coarse.}
   \item{correction}{A list containing \code{bias.correction} and 
     \code{min.eig.val}.}
   
   The command \code{is.mvLSW} returns \code{TRUE} if the supplied 
-  object is a \code{mvLSW} object as described above. Otherwise, the 
-  command returns \code{FALSE}.
+  object is a valid \code{mvLSW} object as described above. 
+  Otherwise, the command returns \code{FALSE}.
 }
 
 \seealso{
@@ -95,7 +102,7 @@ Spec <- array(0, dim = c(3, 3, 8, 256))
 Spec[1, 1, 2, ] <- 10
 Spec[2, 2, 2, ] <- c(rep(5, 64), rep(0.6, 64), rep(5, 128))
 Spec[3, 3, 2, ] <- c(rep(2, 128), rep(8, 128))
-Spec[2, 1, 2, ] <- Spec[1, 2, 2, ] <- c(rep(0, 64), seq(0, 1, len = 128), rep(1, 64))
+Spec[2, 1, 2, ] <- Spec[1, 2, 2, ] <- punif(1:256, 65, 192)
 Spec[3, 1, 2, ] <- Spec[1, 3, 2, ] <- c(rep(-1, 128), rep(5, 128))
 Spec[3, 2, 2, ] <- Spec[2, 3, 2, ] <- -0.5
 
