@@ -57,8 +57,8 @@
     to address the bias in the raw mvEWS estimator.}
   \item{tol}{Tolerance in applying matrix regularisation 
     to ensure each mvEWS matrix per location and level to be 
-    strictly positive definite.	If \code{NA} then the threshold 
-    is not applied. This is 1e-10 by default.}
+    strictly positive definite.	If \code{NA} or \code{-Inf} then 
+	the threshold is not applied. This is 1e-10 by default.}
   \item{verbose}{Logical. Controls the printing of messages whist 
     the computations progress. Set as \code{FALSE} as default.}
 }

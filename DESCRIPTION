@@ -1,8 +1,8 @@
 Package: mvLSW
 Type: Package
 Title: Multivariate, Locally Stationary Wavelet Process Estimation
-Version: 1.2
-Date: 2017-08-04
+Version: 1.2.1
+Date: 2017-09-18
 Authors@R: c(
 	person("Simon","Taylor", role=c("aut","cre"), email="s.taylor2@lancaster.ac.uk"),
 	person("Tim","Park",role="aut",email="t.park@lancaster.ac.uk"),
@@ -17,6 +17,6 @@ Author: Simon Taylor [aut, cre],
   Idris Eckley [ths],
   Rebecca Killick [ctb]
 NeedsCompilation: yes
-Packaged: 2017-08-05 19:38:45 UTC; taylors2
+Packaged: 2017-09-18 10:30:34 UTC; taylors2
 Repository: CRAN
-Date/Publication: 2017-08-06 17:15:49 UTC
+Date/Publication: 2017-09-18 11:21:11 UTC

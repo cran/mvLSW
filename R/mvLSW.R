@@ -646,6 +646,7 @@ mvEWS <- function(
   if(!is.logical(bias.correct) || length(bias.correct) != 1) 
     stop("Invalid 'bias.correct' argument.")
   if(length(tol) != 1)  stop("Invalid 'tol' argument.")
+  if(is.na(tol)) tol <- -Inf
   if(!is.numeric(tol)) stop("Invalid 'tol' argument.")
   if(tol <= 0 && tol != -Inf) stop("Invalid 'tol' argument.")
   if(!is.logical(verbose) || length(verbose) != 1) stop("Invalid 'verbose' argument.")
