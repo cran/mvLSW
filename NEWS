@@ -15,3 +15,6 @@ Version            | Decription                                                 
 -------------------------------------------------------------------------------------------------------------------------
 1.2.1 (18/08/2017) | Allow tol=NA in mvEWS() to specify not to apply positiveness correction  | Tim Park                 
 -------------------------------------------------------------------------------------------------------------------------
+1.2.2 (23/10/2018) | Correct error in RawPeriodogram when defining attributes of output       | Simon Taylor 
+                   | Added Vignette to package                                                | Idris Eckley 
+-------------------------------------------------------------------------------------------------------------------------

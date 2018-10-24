@@ -1,8 +1,9 @@
-973645012ad412005dc522b3aa048090 *ChangeLog
-965623d8db9c1bc6ea9117c4d6ddc7c6 *DESCRIPTION
+edfe46018d482900b032454a4b299498 *DESCRIPTION
 aa52a6b61a6a7bc8e27aed897069abf0 *NAMESPACE
-6bac3b83b7025ec437c47d4023eab844 *R/mvLSW.R
+c075da16892289c44e36d542f0b98138 *NEWS
+506ae6d875499ac5c997d8afdd16fe59 *R/mvLSW.R
 3d0c2f23be398d0350cf5b7f4057375b *inst/CITATION
+3ac2be272f972276b9592b8a48a36dc2 *inst/doc/Multivariate_Locally_Stationary_Wavelet_Process_Analysis.pdf
 3b982dc74517f5c4ecbe321bef5ab56b *man/ApxCI.Rd
 e19310595d0c5b59cc4ce331549a721c *man/AutocorrIP.Rd
 d59abdcfacb02fe135dfee2aeb2a96ed *man/Spectrum2Transfer.Rd

@@ -753,7 +753,7 @@ RawPeriodogram <- function(
     RawPeriod <- as.mvLSW(x = Periodogram, filter.number = filter.number, family = family,
       smooth.type = "all", smooth.kernel = kernel("daniell", 0), 
       bias.correct = FALSE, min.eig.val = -Inf, names = colnames(X))
-	attr(object,"time") <- TIME
+	  attr(RawPeriod,"time") <- TIME
     invisible(RawPeriod)
   }else{
     invisible(Periodogram)
