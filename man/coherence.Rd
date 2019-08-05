@@ -48,6 +48,11 @@
 }
 
 \references{
+  Taylor, S.A.C., Park, T.A. and Eckley, I. (2019) Multivariate 
+  locally stationary wavelet analysis with the mvLSW R package.
+  \emph{Journal of statistical software} \strong{90}(11) pp. 1--16,
+  doi: 10.18637/jss.v090.i11.
+
   Park, T., Eckley, I. and Ombao, H.C. (2014) Estimating 
   time-evolving partial coherence between signals via multivariate 
   locally stationary wavelet processes. \emph{Signal Processing, 

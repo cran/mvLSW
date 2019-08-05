@@ -92,6 +92,13 @@
   Otherwise, the command returns \code{FALSE}.
 }
 
+\references{
+  Taylor, S.A.C., Park, T.A. and Eckley, I. (2019) Multivariate 
+  locally stationary wavelet analysis with the mvLSW R package.
+  \emph{Journal of statistical software} \strong{90}(11) pp. 1--16,
+  doi: 10.18637/jss.v090.i11. 
+}
+
 \seealso{
   \code{\link{mvEWS}}, \code{\link{varEWS}}, \code{kernel}.
 }
@@ -113,4 +120,5 @@ is.mvLSW(EWS)
 plot(EWS, style = 2, info = 2)
 }
 
-\keyword{as.mvLSW, is.mvLSW}
+\concept{as.mvLSW}
+\concept{is.mvLSW}

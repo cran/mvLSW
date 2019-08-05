@@ -18,3 +18,5 @@ Version            | Decription                                                 
 1.2.2 (23/10/2018) | Correct error in RawPeriodogram when defining attributes of output       | Simon Taylor 
                    | Added Vignette to package                                                | Idris Eckley 
 -------------------------------------------------------------------------------------------------------------------------
+1.2.3 (05/08/2019) | Added JSS paper citation                                                 | Simon Taylor 
+-------------------------------------------------------------------------------------------------------------------------

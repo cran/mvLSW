@@ -203,7 +203,9 @@ is.mvLSW <- function(
 
   ##spectrum
   if(!is.array(object$spectrum)) return(FALSE)
-  if(!all(is.na(object$spectrum) || is.numeric(object$spectrum))) return(FALSE)
+  if(anyNA(object$spectrum)) return (FALSE)
+  if(!all(is.numeric(object$spectrum))) return(FALSE)
+#  if(!all(is.na(object$spectrum) || is.numeric(object$spectrum))) return(FALSE)
   Dim <- dim(object$spectrum)
   if(length(Dim) != 4) return(FALSE)
   if(Dim[1] != P) return(FALSE)

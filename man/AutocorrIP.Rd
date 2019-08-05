@@ -49,6 +49,11 @@
 }
 
 \references{
+  Taylor, S.A.C., Park, T.A. and Eckley, I. (2019) Multivariate 
+  locally stationary wavelet analysis with the mvLSW R package.
+  \emph{Journal of statistical software} \strong{90}(11) pp. 1--16,
+  doi: 10.18637/jss.v090.i11. 
+
   Fryzlewicz, P. and Nason, G. (2006) HaarFisz estimation of 
   evolutionary wavelet spectra. \emph{Journal of the Royal 
   Statistical Society. Series B}, \strong{68}(4) pp. 611-634.

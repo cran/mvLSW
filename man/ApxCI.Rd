@@ -34,6 +34,11 @@
 }
 
 \references{
+  Taylor, S.A.C., Park, T.A. and Eckley, I. (2019) Multivariate 
+  locally stationary wavelet analysis with the mvLSW R package.
+  \emph{Journal of statistical software} \strong{90}(11) pp. 1--16,
+  doi: 10.18637/jss.v090.i11. 
+
   Park, T. (2014) Wavelet Methods for Multivariate Nonstationary 
   Time Series, PhD thesis, Lancaster University, pp. 91-111.
 }
