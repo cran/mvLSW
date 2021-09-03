@@ -1584,7 +1584,7 @@ AdjPositiveDef <- function (object, tol = 1e-10)
         if (all(Eig$values > tol)) 
             return(list(Mat = SqMat, minEval = min(Eig$values)))
         SqMatB <- try(PosDefEst(SqMat, tol), silent = TRUE)
-        if (class(SqMatB) != "try-error" && !is.null(SqMatB)) {
+	if (!any(class(SqMatB) == "try-error") && !is.null(SqMatB)) {
           EigB <- eigen(SqMatB, symmetric=TRUE)
           if (all(EigB$values > tol)) 
               return(list(Mat = SqMatB, minEval = min(EigB$values)))
