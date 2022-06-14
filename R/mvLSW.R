@@ -17,7 +17,7 @@ as.mvLSW <- function(
 
   spectrum <- x
   ##spectrum - value type and dimension
-  if(class(spectrum) != "array") stop("'spectrum' is not a numerical array.") 
+  if(!is(spectrum,"array")) stop("'spectrum' is not a numerical array.") 
   Dim <- dim(spectrum)
   if(length(Dim) != 4) stop("Dimension of 'spectrum' is not as expected.")
   if(Dim[1] == 1) stop("'spectrum' is univariate! Refer to the 'wavethresh' library.")
@@ -787,9 +787,6 @@ CorrectBias <- function(
     invisible(object)
   }
 }
-
-### Smoothining of the Evolutionary Wavelet Spectrum Estimate (wrapper) ###
-
 Smooth_EWS <- function(
   object, 
   kernel.name = "daniell", 
@@ -915,7 +912,7 @@ Smooth_GCV <- function(
     kernel <- kernel(kernel.name, kernel.param[1], kernel.param[2])
   }
 
-  if(kernel$coef[1] == 1 && sum(2 * kernel$coef[-1]) < .Machine$double){
+  if(kernel$coef[1] == 1 && sum(2 * kernel$coef[-1]) < .Machine$double.eps){
     warning(paste0("Smoothing kernel ", attributes(kernel)$name, " is equivalent to the identity function."))
     #i.e. smoothed spectrum equates to the raw spectrum
     if(GCVonly){
@@ -966,7 +963,7 @@ Smooth_GCV <- function(
     M = as.integer(kernel$m),
     kernel = as.double(kernel$coef[c(kernel$m:1, 0, 1:kernel$m) + 1]),
     Contribute = as.integer(Contribute),
-    eps = as.double(.Machine$double),
+    eps = as.double(.Machine$double.eps),
     GCV = as.double(0.0),
     ErrorCode = as.integer(0L), PACKAGE = "mvLSW"
   )
@@ -1570,7 +1567,7 @@ PosDefEst <- function(A, tol = .Machine$double.eps){
   return(Aest)
 }
 
-##Adjust Matrix Estimate to be Strictly Positive Definite
+
 AdjPositiveDef <- function (object, tol = 1e-10) 
 {
     if (!is.mvLSW(object)) 
